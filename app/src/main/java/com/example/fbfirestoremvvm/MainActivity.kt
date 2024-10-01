@@ -2,18 +2,17 @@ package com.example.fbfirestoremvvm
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fbfirestoremvvm.Adapter.DataAdapter
 import com.example.fbfirestoremvvm.Data.Data
 import com.example.fbfirestoremvvm.ViewModel.DataViewModel
 import com.example.fbfirestoremvvm.databinding.ActivityMainBinding
-import java.sql.Timestamp
+import com.google.firebase.Timestamp
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -54,22 +53,75 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "Data saved successfully", Toast.LENGTH_SHORT).show()
                 }, onFailure = {
                     Toast.makeText(this@MainActivity, "failed to add data", Toast.LENGTH_SHORT).show()
-                }
+
 
                 })
 
         }
-        override fun onEditItemClick(data: Data){
-            binding.idEtxt.setText(data.stuid)
-            binding.nameEtxt.setText(data.name)
-            binding.emailEtxt.setText(data.email)
-            binding.subjectEtxt.setText(data.subject)
-            binding.birthdateEtxt.setText(data.birthday)
 
-            binding.saveBtn.setOnClickListener{
-                val updateData = Data(data.id,binding.idEtxt.text.toString(),binding.nameEtxt.text.toString(), binding.emailEtxt.text.toString(),binding.subjectEtxt.text.toString(),binding.birthdateEtxt.text.toString()
-                )
-            }
+
 
     }
+
+
+
+
+
+
+    }
+
+    fun onEditItemClick(data: Data) {
+
+        binding.idEtxt.setText(data.stuid)
+        binding.nameEtxt.setText(data.name)
+        binding.emailEtxt.setText(data.email)
+        binding.subjectEtxt.setText(data.subject)
+        binding.birthdateEtxt.setText(data.birthday)
+
+        binding.saveBtn.setOnClickListener {
+            val updateData = Data(
+                data.id, binding.idEtxt.text.toString(),
+                binding.nameEtxt.text.toString(), binding.emailEtxt.text.toString(),
+                binding.subjectEtxt.text.toString(), binding.birthdateEtxt.text.toString()
+            )
+            dataViewModel.updateData(updateData)
+            clearInputField()
+            Toast.makeText(this@MainActivity, "Data updated successfully", Toast.LENGTH_SHORT)
+                .show()
+
+        }
+
+
+    }
+
+    fun onDeleteItemClick(data: Data) {
+
+        AlertDialog.Builder(this).apply {
+            setTitle("Delete Data")
+            setMessage("Are you sure you to deldete this data?")
+            setPositiveButton("Yes") { _, _ ->
+                dataViewModel.deleteData(data,
+                    onSuccess = {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Data deleted successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onFailure = {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Failed to delete data",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
+
+            }
+            setNegativeButton("No", null)
+        }.show()
+
+
+    }
+
 }

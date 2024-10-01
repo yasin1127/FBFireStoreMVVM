@@ -1,6 +1,5 @@
 package com.example.fbfirestoremvvm.Adapter
 
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +7,17 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fbfirestoremvvm.Data.Data
+import com.example.fbfirestoremvvm.MainActivity
 import com.example.fbfirestoremvvm.R
 
-class DataAdapter(private var data:List<Data>, private val itemClickListener:ItemClickListener): RecyclerView.Adapter<DataAdapter.ViewHolder>() {
+class DataAdapter(private var data:List<Data>, private val itemClickListener: MainActivity): RecyclerView.Adapter<DataAdapter.ViewHolder>() {
+    interface ItemClickListener {
+        fun onEditItemClick(data: Data)
+        fun onDeleteItemClick(data: Data)
+
+
+    }
+
     class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
         val stuid = itemView.findViewById<TextView>(R.id.idTxt)
         val name = itemView.findViewById<TextView>(R.id.nameTxt)
@@ -54,10 +61,7 @@ class DataAdapter(private var data:List<Data>, private val itemClickListener:Ite
 
     }
 
-}
 
-interface ItemClickListener {
-    fun onEditItemClick(data: Data)
-    fun onDeleteItemClick(data: Data)
 
 }
+
